@@ -38,6 +38,17 @@ button:hover {
   background-color: #45a049;
 }
 
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+
 .response {
   margin-top: 20px;
   padding: 10px;
