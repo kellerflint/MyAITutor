@@ -11,7 +11,7 @@ function App() {
   const askQuestion = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post('http://127.0.0.1:5000/query', { query });
+      const res = await axios.post('http://localhost:3001/assistant', { "question": query });
       setResponse(res.data.answer);
     } catch (error) {
       console.error('Error asking question:', error);
