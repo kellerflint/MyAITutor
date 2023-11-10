@@ -1,43 +1,31 @@
-import React, { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import axios from 'axios';
+import React from 'react';
 import './App.css'
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+  RedirectToSignIn,
+} from "@clerk/clerk-react";
+import Message from './components/Message';
+
+console.log("key", process.env.REACT_APP_CLERK_PUB_KEY)
+if (!process.env.REACT_APP_CLERK_PUB_KEY) throw new Error('Missing Publishable Key');
+const clerkPubKey = process.env.REACT_APP_CLERK_PUB_KEY;
 
 function App() {
-  const [query, setQuery] = useState('');
-  const [response, setResponse] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const askQuestion = async () => {
-    setIsLoading(true);
-    try {
-      const res = await axios.post('http://localhost:3001/assistant', { "question": query });
-      setResponse(res.data.answer);
-    } catch (error) {
-      console.error('Error asking question:', error);
-      setResponse('Sorry, an error occurred while trying to ask the question.');
-    }
-    setIsLoading(false);
-  };
-
   return (
-    <div className="App">
-      <h1>Student AI Interface</h1>
-      <textarea
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Ask a question..."
-      />
-      <button onClick={askQuestion} disabled={isLoading}>
-        {isLoading ? 'Loading...' : 'Ask'}
-      </button>
-      {response &&
-        <div className="response">
-          <strong>AI Response:</strong>
-          <ReactMarkdown children={response} />
+    <ClerkProvider publishableKey={clerkPubKey}>
+      <SignedIn>
+        <div className="App">
+          <Message></Message>
         </div>
-      }
-    </div>
+      </SignedIn>
+      <SignedOut>
+        <RedirectToSignIn />
+      </SignedOut>
+    </ClerkProvider>
   );
 }
 
